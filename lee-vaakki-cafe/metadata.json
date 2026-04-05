@@ -1,0 +1,7 @@
+{
+  "name": "LEE VAAKKI Cafe",
+  "description": "A responsive café and restaurant website for LEE VAAKKI Cafe, featuring a clean, Subway-inspired UI, menu management, and online ordering support.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
