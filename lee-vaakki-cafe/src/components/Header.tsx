@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 import { auth, signInWithGoogle } from '../firebase';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { useCart } from '../context/CartContext';
-const {totaliteams} = usecart;
+const {totalItems} = usecart;
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
