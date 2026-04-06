@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 import { auth, signInWithGoogle } from '../firebase';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { useCart } from '../context/CartContext';
-
+const {totaliteams} = usecart;
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -92,8 +92,8 @@ export default function Header() {
                 Login
               </button>
             )}
-            <Link
-              to="/checkout"
+            <Link {totalItems} 
+                to="/checkout" {totalItems}
               className="bg-brand-green text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-opacity-90 transition-all flex items-center gap-2 relative"
             >
               <ShoppingBag size={18} />
