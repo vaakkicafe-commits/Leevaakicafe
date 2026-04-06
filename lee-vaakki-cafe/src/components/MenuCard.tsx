@@ -55,7 +55,7 @@ export default function MenuCard({ name, price, category, description, imageUrl,
             {category}
           </span>
           <button 
-            onClick={() => addToCart({ name, price, imageUrl })}
+            onClick={() => addToCart</add>({ name, price, imageUrl })}
             className="bg-brand-green text-white p-2 rounded-full hover:bg-opacity-90 transition-all shadow-md shadow-brand-green/10 flex items-center gap-1 px-4"
           >
             <Plus size={18} />
