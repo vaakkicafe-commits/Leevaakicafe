@@ -1,15 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-export interface CartItem {
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl?: string;
-}
-
+// 1. Update the interface to accept the second argument
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (item: any) => void;
+  addToCart: (item: any, quantityToAdd?: number) => void; // Updated this line
   removeFromCart: (name: string) => void;
   updateQuantity: (name: string, quantity: number) => void;
   clearCart: () => void;
@@ -17,68 +9,23 @@ interface CartContextType {
   totalPrice: number;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+// ... inside the CartProvider function ...
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (item: any) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(i => i.name === item.name);
-      if (existingItem) {
-        return prevCart.map(i =>
-          i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prevCart, { ...item, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (name: string) => {
-    setCart(prevCart => prevCart.filter(i => i.name !== name));
-  };
-
-  const updateQuantity = (name: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(name);
-      return;
+// 2. Update the implementation
+const addToCart = (item: any, quantityToAdd: number = 1) => {
+  setCart(prevCart => {
+    const existingItem = prevCart.find(i => i.name === item.name);
+    
+    if (existingItem) {
+      // If item exists, add the new quantity to the existing quantity
+      return prevCart.map(i =>
+        i.name === item.name 
+          ? { ...i, quantity: i.quantity + quantityToAdd } 
+          : i
+      );
     }
-    setCart(prevCart =>
-      prevCart.map(i => (i.name === name ? { ...i, quantity } : i))
-    );
-  };
-
-  const clearCart = () => setCart([]);
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  return (
-    <CartContext.Provider value={{
-      cart,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-      totalItems,
-      totalPrice
-    }}>
-      {children}
-    </CartContext.Provider>
-  );
-}
-
-export function useCart() {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
-}
+    
+    // If it's a new item, add it with the specified quantity
+    return [...prevCart, { ...item, quantity: quantityToAdd }];
+  });
+};
