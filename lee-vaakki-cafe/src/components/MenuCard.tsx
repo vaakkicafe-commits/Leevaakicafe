@@ -1,5 +1,6 @@
+import { useState } from 'react'; // Added useState
 import { motion } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react'; // Added Minus
 import { useCart } from '../context/CartContext';
 
 interface MenuCardProps {
@@ -13,6 +14,15 @@ interface MenuCardProps {
 
 export default function MenuCard({ name, price, category, description, imageUrl, isFeatured }: MenuCardProps) {
   const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1); // Local state for selector
+
+  const handleIncrement = () => setQuantity(prev => prev + 1);
+  const handleDecrement = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+
+  const handleAddToCart = () => {
+    addToCart({ name, price, imageUrl }, quantity);
+    setQuantity(1); // Optional: Reset to 1 after adding
+  };
 
   return (
     <motion.div
@@ -50,16 +60,38 @@ export default function MenuCard({ name, price, category, description, imageUrl,
           {description || "Freshly prepared with the finest ingredients for a delightful experience."}
         </p>
         
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-50 px-2 py-1 rounded">
-            {category}
-          </span>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-50 px-2 py-1 rounded">
+              {category}
+            </span>
+            
+            {/* New Quantity Selector UI */}
+            <div className="flex items-center gap-3 bg-gray-50 rounded-lg px-2 py-1 border border-gray-100">
+              <button 
+                onClick={handleDecrement}
+                className="p-1 hover:text-brand-green transition-colors"
+                aria-label="Decrease quantity"
+              >
+                <Minus size={14} />
+              </button>
+              <span className="font-bold text-sm min-w-[20px] text-center">{quantity}</span>
+              <button 
+                onClick={handleIncrement}
+                className="p-1 hover:text-brand-green transition-colors"
+                aria-label="Increase quantity"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+          </div>
+
           <button 
-            onClick={() => addToCart</add>({ name, price, imageUrl })}
-            className="bg-brand-green text-white p-2 rounded-full hover:bg-opacity-90 transition-all shadow-md shadow-brand-green/10 flex items-center gap-1 px-4"
+            onClick={handleAddToCart}
+            className="w-full bg-brand-green text-white py-2.5 rounded-xl hover:bg-opacity-90 transition-all shadow-md shadow-brand-green/10 flex items-center justify-center gap-2"
           >
             <Plus size={18} />
-            <span className="text-xs font-bold uppercase tracking-wider">Add</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Add to Cart</span>
           </button>
         </div>
       </div>
